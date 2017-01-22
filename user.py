@@ -1,9 +1,10 @@
 import sqlite3
 from flask_restful import Resource, reqparse
 
-class User:
+class User(Resource):
+    TABLE_NAME = 'users'
+
     def __init__(self, _id, username, password):
-        #id is python keyword thus the underscore
         self.id = _id
         self.username = username
         self.password = password
@@ -13,14 +14,10 @@ class User:
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
 
-        query = "Select * from users where username=?"
-
-        #has to be in form of a tuple with comma
+        query = "SELECT * FROM {table} WHERE username=?".format(table=cls.TABLE_NAME)
         result = cursor.execute(query, (username,))
         row = result.fetchone()
         if row:
-            #id, username, password
-            #positional arguments
             user = cls(*row)
         else:
             user = None
@@ -33,14 +30,10 @@ class User:
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
 
-        query = "Select * from users where id=?"
-
-        #has to be in form of a tuple with comma
+        query = "SELECT * FROM {table} WHERE id=?".format(table=cls.TABLE_NAME)
         result = cursor.execute(query, (_id,))
         row = result.fetchone()
         if row:
-            #id, username, password
-            #positional arguments
             user = cls(*row)
         else:
             user = None
@@ -50,36 +43,34 @@ class User:
 
 
 class UserRegister(Resource):
+    TABLE_NAME = 'users'
+
     parser = reqparse.RequestParser()
     parser.add_argument('username',
-                        type=str,
-                        required=True,
-                        help="This field cannot be blank"
-                        )
+        type=str,
+        required=True,
+        help="This field cannot be left blank!"
+    )
     parser.add_argument('password',
-                        type=str,
-                        required=True,
-                        help="This field cannot be blank"
-                        )
+        type=str,
+        required=True,
+        help="This field cannot be left blank!"
+    )
+
     def post(self):
         data = UserRegister.parser.parse_args()
 
-
         if User.find_by_username(data['username']):
-            return {'message': "A user with name '{}' already exists.".format(data['username'])}, 400
+            return {"message": "User with that username already exists."}, 400
 
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
 
-        query = "Insert INTO users VALUES (NULL, ?, ?)"
-
+        query = "INSERT INTO {table} VALUES (NULL, ?, ?)".format(table=self.TABLE_NAME)
         cursor.execute(query, (data['username'], data['password']))
 
         connection.commit()
         connection.close()
 
         return {"message": "User created successfully."}, 201
-
-
-
 
