@@ -21,7 +21,7 @@ class Item(Resource):
                         help="This filed cannont be blank"
                         )
 
-    #@jwt_required()
+    @jwt_required()
     def get(self, name):
         return {'item': next(filter(lambda x: x['name'] == name, items), None)}
         #return {'item': item}, 200 if item is not None else 404
