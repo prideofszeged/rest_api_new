@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required
 from security import authenticate, identity
+from user import UserRegister
 
 app = Flask(__name__)
 app.secret_key = '12234'
@@ -10,6 +11,7 @@ api = Api(app)
 jwt = JWT(app, authenticate, identity) #creates new endpoint /auth
 
 items = []
+users = []
 
 #Flask restful jsonifies stuff for us
 # student class inherits from Resource
@@ -18,9 +20,8 @@ class Item(Resource):
     parser.add_argument('price',
                         type=float,
                         required=True,
-                        help="This filed cannont be blank"
+                        help="This field cannot be blank"
                         )
-
     @jwt_required()
     def get(self, name):
         return {'item': next(filter(lambda x: x['name'] == name, items), None)}
@@ -55,8 +56,48 @@ class ItemList(Resource):
     def get(self):
         return {'items': items}
 
+
+# class UserRegister(Resource):
+#     parser = reqparse.RequestParser()
+#     parser.add_argument('username',
+#                         type=str,
+#                         required=True,
+#                         help="This field cannot be blank"
+#                         )
+#     @jwt_required()
+#     def get(self, username):
+#         return {'username': next(filter(lambda x: x['username'] == username, users), None)}
+#         #return {'item': item}, 200 if item is not None else 404
+#
+#     def post(self, username):
+#         if next(filter(lambda x: x['username'] == username, users), None):
+#             return {'message': "A user with name '{}' already exists.".format(username)}, 400
+#         data = Item.parser.parse_args()
+#
+#         #data = request.get_json(silent=True)
+#         username = {'username': username, 'password': data['password']}
+#         users.append(username)
+#         return item, 201
+#
+#     def delete(self, username):
+#         global users
+#         users = list(filter(lambda x: x['username'] != username, users))
+#         return {'message': 'User Deleted'}
+#
+#     def put(self, username):
+#         data = UserRegister.parser.parse_args()
+#         username = next(filter(lambda x: x['username'] == username, users), None)
+#         if username is None:
+#             item = {'username': username, 'password': data['password']}
+#             users.append(username)
+#         else:
+#             users.update(data)
+#         return username
+
+
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
+api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__':
     app.run(port=4995, debug=True)  # important to mention debug=True
