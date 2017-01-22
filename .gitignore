@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 
+*.db
 # C extensions
 *.so
 
@@ -40,7 +41,7 @@ docs/_build/
 ._*
 .*.sw*
 *~
-../.idea/
+/.idea/*
 .mr.developer.cfg
 .project
 .pydevproject
