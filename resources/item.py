@@ -3,10 +3,10 @@ from flask_jwt import jwt_required
 import sqlite3
 from models.item import ItemModel
 
-
-
 #Flask restful jsonifies stuff for us
 # student class inherits from Resource
+
+
 class Item(Resource):
     TABLE_NAME = 'items'
 
@@ -16,6 +16,7 @@ class Item(Resource):
                         required=True,
                         help="This field cannot be blank"
                         )
+
     @jwt_required()
     def get(self, name):
         item = ItemModel.find_by_name(name)
@@ -37,7 +38,7 @@ class Item(Resource):
         except:
             return {"message": "An error occurred inserting the item."}, 500
 
-        return item, 201
+        return item.json(), 201
 
     def delete(self, name):
 
@@ -63,17 +64,16 @@ class Item(Resource):
         updated_item = ItemModel(name, data['price'])
         if item is None:
             try:
-                updated_item.insert(updated_item)
-            except sqlite3.Error as er:
-                print('er', er.message)
+                updated_item.insert()
+            except:
                 return {"message": "An error occurred inserting the item."}, 500
         else:
             try:
-                ItemModel.update(updated_item)
+                updated_item.update()
             except:
                 return {"message": "An error occurred updating the item."}, 500
 
-        return updated_item
+        return updated_item.json()
 
 class ItemList(Resource):
     TABLE_NAME = 'items'

@@ -27,6 +27,7 @@ class UserRegister(Resource):
 
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
+        print("here")
 
         query = "INSERT INTO {table} VALUES (NULL, ?, ?)".format(table=self.TABLE_NAME)
         cursor.execute(query, (data['username'], data['password']))

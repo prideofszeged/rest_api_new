@@ -4,6 +4,8 @@ import sqlite3
 
 
 class ItemModel:
+    TABLE_NAME = 'items'
+
     def __init__(self, name, price):
         self.name = name
         self.price = price
