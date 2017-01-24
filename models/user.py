@@ -2,12 +2,18 @@ import sqlite3
 from flask_restful import Resource
 # Resource what the api asks for, can use....external representation of entity
 # Model internal representation of entity
+from db import db
 
 
-class UserModel:
-    TABLE_NAME = 'users'
+class UserModel(db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80))
+    password = db.Column(db.String(80))
 
     def __init__(self, _id, username, password):
+        # must match columns above
         self.id = _id
         self.username = username
         self.password = password
