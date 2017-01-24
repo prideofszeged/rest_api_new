@@ -56,7 +56,6 @@ class Item(Resource):
 
         return {'message': 'Item deleted'}
 
-
     def put(self, name):
         data = Item.parser.parse_args()
 
@@ -75,8 +74,10 @@ class Item(Resource):
 
         return updated_item.json()
 
+
 class ItemList(Resource):
     TABLE_NAME = 'items'
+
     def get(self):
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()

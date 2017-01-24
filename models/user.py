@@ -3,6 +3,7 @@ from flask_restful import Resource
 # Resource what the api asks for, can use....external representation of entity
 # Model internal representation of entity
 
+
 class UserModel:
     TABLE_NAME = 'users'
 
