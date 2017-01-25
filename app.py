@@ -6,6 +6,8 @@ from resources.store import StoreList, Store
 from resources.item import Item, ItemList
 from resources.user import UserRegister
 from security import authenticate, identity
+from app import app
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
@@ -28,8 +30,11 @@ api.add_resource(UserRegister, '/register')
 api.add_resource(Store, '/store/<string:name>')
 api.add_resource(StoreList, '/stores')
 
+
+
 if __name__ == '__main__':
     from db import db
     # because of circular imports
     db.init_app(app)
-    app.run(port=4995, debug=True)  # important to mention debug=True
+    #app.run(port=4995, debug=True)  # important to mention debug=True
+    app.run(debug=True)  # important to mention debug=True
