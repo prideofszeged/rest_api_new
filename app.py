@@ -6,7 +6,6 @@ from resources.store import StoreList, Store
 from resources.item import Item, ItemList
 from resources.user import UserRegister
 from security import authenticate, identity
-from app import app
 
 
 app = Flask(__name__)
@@ -37,4 +36,4 @@ if __name__ == '__main__':
     # because of circular imports
     db.init_app(app)
     #app.run(port=4995, debug=True)  # important to mention debug=True
-    app.run(debug=True)  # important to mention debug=True
+    app.run(port=5000, debug=True)  # important to mention debug=True
